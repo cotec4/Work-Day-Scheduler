@@ -85,7 +85,6 @@ function changeClass() {
     }
 }
 changeClass();
-console.log(parseInt(rows[2].id));
 
 // Save the Data to local storage
 function saveData(event) {
