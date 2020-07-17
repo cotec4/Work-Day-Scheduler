@@ -1,19 +1,10 @@
 var currentDay = document.getElementById("currentDay");
 
-// Get Current Date as well as hour to input time and date and to use hours on changing textarea class
-var date = new Date(),
-    weekday = new Array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'),
-    dayOfWeek = weekday[date.getDay()],
-    domEnder = function () { var a = date; if (/1/.test(parseInt((a + "").charAt(0)))) return "th"; a = parseInt((a + "").charAt(1)); return 1 == a ? "st" : 2 == a ? "nd" : 3 == a ? "rd" : "th" }(),
-    dayOfMonth = today + (date.getDate() < 10) ? '0' + date.getDate() + domEnder : date.getDate() + domEnder,
-    months = new Array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'),
-    curMonth = months[date.getMonth()],
-    curHour = date.getHours(),
-    today = dayOfWeek + "," + " " + curMonth + " " + dayOfMonth;
-currentDay.innerHTML = today;
+// Get current hour and current date through Moment JS for time-blocks and date textarea
+var curHour = moment().hours();
+currentDay.innerHTML = moment().format("dddd" + ", " + "MMMM Do");
 
 // Create for loop for creating divs for each time block
-
 function createTimeBlock() {
     for (var i = 1; i < 25; i++) {
         var parentDiv = $("<div>").addClass("row");
@@ -81,9 +72,8 @@ for (var i = 1; i < 25; i++) {
     $("#" + i).text(localStorage.getItem($("#" + i).parent().children()[0].textContent));
 }
 
-
 // Call the function to ensure timeblocks are changing classes / colors
 changeClass();
 
-// On Click of save move data to local storage
+// On Click of save buttons move data to local storage
 $(document).on("click", ".saveBtn", saveData);
