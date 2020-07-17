@@ -1,57 +1,5 @@
 var currentDay = document.getElementById("currentDay");
 
-var time1 = document.getElementById("time1"),
-    time2 = document.getElementById("time2"),
-    time3 = document.getElementById("time3"),
-    time4 = document.getElementById("time4"),
-    time5 = document.getElementById("time5"),
-    time6 = document.getElementById("time6"),
-    time7 = document.getElementById("time7"),
-    time8 = document.getElementById("time8"),
-    time9 = document.getElementById("time9"),
-    time10 = document.getElementById("time10"),
-    time11 = document.getElementById("time11"),
-    time12 = document.getElementById("time12"),
-    time13 = document.getElementById("time13"),
-    time14 = document.getElementById("time14"),
-    time15 = document.getElementById("time15"),
-    time16 = document.getElementById("time16"),
-    time17 = document.getElementById("time17"),
-    time18 = document.getElementById("time18"),
-    time19 = document.getElementById("time19"),
-    time20 = document.getElementById("time20"),
-    time21 = document.getElementById("time21"),
-    time22 = document.getElementById("time22"),
-    time23 = document.getElementById("time23"),
-    time24 = document.getElementById("time24");
-var times = [time1, time2, time3, time4, time5, time6, time7, time8, time9, time10, time11, time12, time13, time14, time15, time16, time17, time18, time19, time20, time21, time22, time23,time24];
-
-var row1 = document.getElementById("1"),
-    row2 = document.getElementById("2"),
-    row3 = document.getElementById("3"),
-    row4 = document.getElementById("4"),
-    row5 = document.getElementById("5"),
-    row6 = document.getElementById("6"),
-    row7 = document.getElementById("7"),
-    row8 = document.getElementById("8"),
-    row9 = document.getElementById("9"),
-    row10 = document.getElementById("10"),
-    row11 = document.getElementById("11"),
-    row12 = document.getElementById("12"),
-    row13 = document.getElementById("13"),
-    row14 = document.getElementById("14"),
-    row15 = document.getElementById("15"),
-    row16 = document.getElementById("16"),
-    row17 = document.getElementById("17"),
-    row18 = document.getElementById("18"),
-    row19 = document.getElementById("19"),
-    row20 = document.getElementById("20"),
-    row21 = document.getElementById("21"),
-    row22 = document.getElementById("22"),
-    row23 = document.getElementById("23"),
-    row24 = document.getElementById("24");
-var rows = [row1, row2, row3, row4, row5, row6, row7, row8, row9, row10, row11, row12, row13, row14, row15, row16, row17, row18, row19, row20, row21, row22, row23, row24];
-
 // Get Current Date as well as hour to input time and date and to use hours on changing textarea class
 var date = new Date(),
     weekday = new Array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'),
@@ -64,34 +12,64 @@ var date = new Date(),
     today = dayOfWeek + "," + " " + curMonth + " " + dayOfMonth;
 currentDay.innerHTML = today;
 
+// Create for loop for creating divs for each time block
+
+function createTimeBlock() {
+    for (var i = 1; i < 25; i++) {
+        var parentDiv = $("<div>").addClass("row");
+        var timeDiv = $("<div>").addClass("col-md-1 hour time-block");
+        var timeP = $("<p>").attr("id", "time" + i).text(function () {
+            if (i < 12) {
+                return i + "AM";
+            }
+            else if (i === 12) {
+                return i + "PM";
+            }
+            else if (i > 12) {
+                return i - 12 + "PM";
+            }
+        });
+        var textArea = $("<textarea>").addClass("col-md-10").attr("type", "text").attr("id", i);
+        var button = $("<button>").addClass("col-md-1 saveBtn").attr("type", "submit");
+        var buttonI = $("<i>").addClass("far fa-save");
+        timeDiv.append(timeP);
+        button.append(buttonI);
+        parentDiv.append(timeDiv, textArea, button);
+        $(".container").append(parentDiv);
+    }
+}
+
+// Call the function to create the timeblocks
+createTimeBlock();
+
 // Function to change the class (and therefore formatting) for each Timeblock
 function changeClass() {
-    for (var i = 0; i < rows.length; i++) {
-        if (curHour === parseInt(rows[i].id)) {
-            rows[i].classList.add("present");
+    for (var i = 1; i < 25; i++) {
+        if (curHour === i) {
+            $("#" + i).addClass("present");
         }
-        else if (curHour < parseInt(rows[i].id)) {
-            rows[i].classList.add("future");
+        else if (curHour < i) {
+            $("#" + i).addClass("future");
         }
-        else if (curHour > parseInt(rows[i].id)) {
-            rows[i].classList.add("past");
+        else if (curHour > i) {
+            $("#" + i).addClass("past");
         }
-        if (curHour !== parseInt(rows[i].id) && parseInt(rows[i].id) < 9) {
-            rows[i].parentNode.classList.add("d-none");
+        if (curHour !== i && i < 9) {
+            $("#" + i).parent().addClass("d-none");
         }
-        if (curHour !== parseInt(rows[i].id) && parseInt(rows[i].id) > 17) {
-            rows[i].parentNode.classList.add("d-none");
+        if (curHour !== i && i > 17) {
+            $("#" + i).parent().addClass("d-none");
         }
     }
 }
 
 // Save the Data to local storage
 function saveData(event) {
-    
+
     var placeToSave = $(this).parent().children()[1];
     var textToSave = $(this).parent().children()[1].value;
     var keyToSave = $(this).parent().children()[0].textContent;
-    
+
     if (textToSave !== "") {
         localStorage.setItem(keyToSave, textToSave);
         placeToSave.innerHTML = textToSave;
@@ -99,9 +77,10 @@ function saveData(event) {
 }
 
 // Ensure the Saved Data stays on the page even when refreshed
-for (var i = 0; i < times.length; i++) {
-    $(rows[i]).text(localStorage.getItem(times[i].textContent));
+for (var i = 1; i < 25; i++) {
+    $("#" + i).text(localStorage.getItem($("#" + i).parent().children()[0].textContent));
 }
+
 
 // Call the function to ensure timeblocks are changing classes / colors
 changeClass();
